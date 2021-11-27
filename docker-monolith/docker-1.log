@@ -1,0 +1,32 @@
+REPOSITORY                       TAG                 IMAGE ID            CREATED             SIZE
+alexeybobovsky/ubuntu-tmp-file   latest              09aca3d271ee        2 minutes ago       63.1MB
+ubuntu                           18.04               5a214d77f5d7        7 weeks ago         63.1MB
+hello-world                      latest              feb5d9fea6a5        8 weeks ago         13.3kB
+
+
+Задание: На основе вывода команд $ docker inspect <u_container_id> и $ docker inspect <u_image_id> объяснить чем отличается контейнер от образа.
+
+По определению контейнер от образа отличается наличием R/W слоя в объединённой файловой системе
+В выводе команды docker inspect для образа есть информация про файловую систему (по умолчанию OverlayFS) в секции GraphDriver:
+
+    "GraphDriver": {
+        "Data": {
+            "MergedDir": "/var/lib/docker/overlay2/5ad4525b5a618bd2f7737e80b3c3f35b34242b4a27766860c899b658a3ef9eec/merged",
+            "UpperDir": "/var/lib/docker/overlay2/5ad4525b5a618bd2f7737e80b3c3f35b34242b4a27766860c899b658a3ef9eec/diff",
+            "WorkDir": "/var/lib/docker/overlay2/5ad4525b5a618bd2f7737e80b3c3f35b34242b4a27766860c899b658a3ef9eec/work"
+        },
+        "Name": "overlay2"
+
+В выводе docker inspect для контейнера добавляется обобщённый нижний слой - LowerDir с правами RO полученный сложением разницы всех нижних слоёв, относительно которого применяются изменения с верхнего слоя UpperDir, доступного для записи при работе контейнера:
+
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/053b44baa042124f737153b9e8b258ab7cd825b9587c82c5dfdd3a6807037a32-init/diff:/var/lib/docker/overlay2/5ad4525b5a618bd2f7737e80b3c3f35b34242b4a27766860c899b658a3ef9eec/diff",
+                "MergedDir": "/var/lib/docker/overlay2/053b44baa042124f737153b9e8b258ab7cd825b9587c82c5dfdd3a6807037a32/merged",
+                "UpperDir": "/var/lib/docker/overlay2/053b44baa042124f737153b9e8b258ab7cd825b9587c82c5dfdd3a6807037a32/diff",
+                "WorkDir": "/var/lib/docker/overlay2/053b44baa042124f737153b9e8b258ab7cd825b9587c82c5dfdd3a6807037a32/work"
+            },
+            "Name": "overlay2"
+        },
+
+Также по выводу  docker inspect для контейнера видно что тут содержится секцию HostConfig в которой перечислены инфраструктурные параметры эмулируемого контейнером хоста, в то время как в выводе для образа такой информации нет.
