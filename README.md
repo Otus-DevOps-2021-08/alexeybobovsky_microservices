@@ -2,6 +2,7 @@
 ## Содержание
 
 12. [Docker. Образы, контейнеры, DockerHub.](#docker-2)
+13. [Docker-образы. Микросервисы.](#docker-3)
 
 ## ДЗ 12. Docker. Образы, контейнеры, DockerHub.<a name="docker-2"></a>
 
@@ -44,9 +45,45 @@
     docker commit 4a6f32d31f7d alexeybobovsky/ubuntu-tmp-file               //Создает image из контейнера (Контейнер остается запущенным)
     docker inspect 4a6f32d31f7d                                             //подробная инфа об образе/контейнере - зависит от id
     docker stop 4a6f32d31f7d                                                //посылает SIGTERM, и через 10 секунд (настраивается) посылает SIGKILL
-    docker kill 4a6f32d31f7d                                                //посылает SIGKILL - убивает контейнер
+    docker kill 4a6f32d31f7d                                                //посылает SIGKILL - останавливает контейнер
+    docker kill $(docker ps -q)                                             //останавливает все запущенные контейнеры
     docker system df                                                        //Отображает сколько дискового пространства занято образами, контейнерами и volume’ами
     docker rm $(docker ps -a -q)                                            //удалит все незапущенные контейнеры (с опцией -f также запущенные)
     docker rmi 09aca3d271ee                                                 //удаляет image, если от него не зависят запущенные контейнеры
 
+  ```
+
+Установка docker-mashine (depricated)
+  ```
+    docker-machine create \
+    --driver generic \
+    --generic-ip-address=51.250.10.185 \
+    --generic-ssh-user yc-user \
+    --generic-ssh-key ~/.ssh/appuser \
+    docker-host
+  ```
+
+## ДЗ 13. Docker-образы. Микросервисы.<a name="docker-3"></a>
+
+
+### План работы
+* Разбить приложение на несколько компонентов
+* Запустить микросервисное приложение
+### Практические задачи
+
+#### Выполнения плана работ по сценарию в методичке
+* Освоить описание и сборку Docker-образы для сервисного приложения
+* Освоить оптимизацию работы с Docker-образами
+* Запуск и работа приложения на основе Docker-образов, оценка удобства запуска контейнеров при помощи **docker run**
+* Ознакомление с **volume** в docker.
+
+### Useful things
+
+Комманды
+  ```
+    docker network create reddit                                            //Создание bridge-сети для приложения
+    docker run -d --network=reddit \
+        --network-alias=post_db --network-alias=comment_db mongo:latest     //Запуск контейнеров в сети и добавление им сетевых алиасов
+    docker volume create reddit_db                                          //Создание Docker volume
+    docker run -d -v reddit_db:/data/db mongo:latest                        //Подключение Docker volume к контейнеру
   ```
