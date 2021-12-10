@@ -2,7 +2,8 @@
 ## Содержание
 
 12. [Docker. Образы, контейнеры, DockerHub.](#docker-2)
-13. [Docker-образы. Микросервисы.](#docker-3)
+13. [Docker. Образы. Микросервисы.](#docker-3)
+14. [Docker. Сети. docker-compose.](#docker-4)
 
 ## ДЗ 12. Docker. Образы, контейнеры, DockerHub.<a name="docker-2"></a>
 
@@ -65,7 +66,6 @@
 
 ## ДЗ 13. Docker-образы. Микросервисы.<a name="docker-3"></a>
 
-
 ### План работы
 * Разбить приложение на несколько компонентов
 * Запустить микросервисное приложение
@@ -86,4 +86,26 @@
         --network-alias=post_db --network-alias=comment_db mongo:latest     //Запуск контейнеров в сети и добавление им сетевых алиасов
     docker volume create reddit_db                                          //Создание Docker volume
     docker run -d -v reddit_db:/data/db mongo:latest                        //Подключение Docker volume к контейнеру
+  ```
+
+## ДЗ 14. Docker: сети. docker-compose.<a name="docker-4"></a>
+
+### План работы
+* Работа с сетями в Docker
+* Использование docker-compose
+### Практические задачи
+
+#### Выполнение плана работ по сценарию в методичке
+* Освоены особенности работы с сетями в Docker
+* Выполнена сборка и запуск приложений с помощью docker-compose
+* Описана параметризация базового имени проекта
+
+Базовое имя проекта можно задать через ключ ```-p``` в docker-compose CLI либо задать через переменную ```COMPOSE_PROJECT_NAME``` в ```.env``` файле. По умолчанию используется имя рабочей директории.
+
+### Useful things
+
+Комманды
+  ```
+    docker network connect front_net post                                   //Подключение контейнера post к сети front_net
+    docker-compose up -d                                                    //Сборка и запуск приложений с помощью docker-compose
   ```
