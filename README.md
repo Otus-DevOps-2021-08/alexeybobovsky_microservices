@@ -1,9 +1,13 @@
 # Практические работы по курсу **DevOps практики и инструменты** (alexeybobovsky_microservices)
+
+*Репозиторий с заданиями по инфраструктуре (alexeybobovsky_infra) находится [тут](https://github.com/Otus-DevOps-2021-08/alexeybobovsky_infra)*
+
 ## Содержание
 
 12. [Docker. Образы, контейнеры, DockerHub.](#docker-2)
 13. [Docker. Образы. Микросервисы.](#docker-3)
 14. [Docker. Сети. docker-compose.](#docker-4)
+16. [Создание и запуск системы мониторинга Prometheus.](#monitoring-1)
 
 ## ДЗ 12. Docker. Образы, контейнеры, DockerHub.<a name="docker-2"></a>
 
@@ -51,6 +55,7 @@
     docker system df                                                        //Отображает сколько дискового пространства занято образами, контейнерами и volume’ами
     docker rm $(docker ps -a -q)                                            //удалит все незапущенные контейнеры (с опцией -f также запущенные)
     docker rmi 09aca3d271ee                                                 //удаляет image, если от него не зависят запущенные контейнеры
+    eval $(docker-machine env docker-host)                                  //
 
   ```
 
@@ -108,4 +113,33 @@
   ```
     docker network connect front_net post                                   //Подключение контейнера post к сети front_net
     docker-compose up -d                                                    //Сборка и запуск приложений с помощью docker-compose
+  ```
+
+## ДЗ 16. Создание и запуск системы мониторинга Prometheus.<a name="monitoring-1"></a>
+
+### План работы
+* Prometheus: запуск, конфигурация, знакомство с Web UI
+* Мониторинг состояния микросервисов
+* Сбор метрик хоста с использованием экспортера
+
+### Практические задачи
+
+#### Выполнение плана работ по сценарию в методичке
+* Созданы файл конфигурации, образ,  стартован контейнер с Prometheus и микросервисами. Проведены базовые манипуляции с Web UI Prometheus.
+* Сконфигурирован и создан образ експортера, стартован с Prometheus и микросервисами,  проведён стресс тест на хосте и зафиксированы соответствующие изменения метрик
+* Полученные образы запушены в докерхаб:
+  - [Образ Prometheus](https://hub.docker.com/repository/docker/fmeat/prometheus)
+  - [Образ ui](https://hub.docker.com/repository/docker/fmeat/ui)
+  - [Образ comment](https://hub.docker.com/repository/docker/fmeat/comment)
+  - [Образ post](https://hub.docker.com/repository/docker/fmeat/post)
+
+### Useful things
+
+Комманды
+  ```
+    docker-compose stop post                                   //Остановка отдельного контейнера посредством docker-compose
+    docker-compose start post                                  //Старт отдельного контейнера посредством docker-compose
+    docker-compose down                                        //Остановка и удаление всех поднятых ранее с помощью  docker-compose up -d контейнеров (в и.ч. и network)
+    yes > /dev/null                                            //старт стресс теста CPU
+
   ```
