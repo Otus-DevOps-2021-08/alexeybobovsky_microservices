@@ -6,7 +6,7 @@ ENV POST_DATABASE posts
 WORKDIR /app
 COPY . /app
 
-RUN apk --no-cache --update add build-base && \
+RUN apk --no-cache --update add build-base musl-dev && \
     pip install -r requirements.txt && \
     apk del build-base
 
