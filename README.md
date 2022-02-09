@@ -9,6 +9,7 @@
 14. [Docker. Сети. docker-compose.](#docker-4)
 16. [Создание и запуск системы мониторинга Prometheus.](#monitoring-1)
 17. [Логирование приложений и распределенная трассировка.](#logging-1)
+18. [Установка и настройка Kubernetes (kubeadm).](#kubernetes-1)
 
 ## ДЗ 12. Docker. Образы, контейнеры, DockerHub.<a name="docker-2"></a>
 
@@ -172,5 +173,34 @@
     docker-compose -f composeFile.yml down          //Остановка docker-compose проекта с указанием специфичного файла
     docker-compose stop ui && \                     //Остановка
     docker-compose rm ui && docker-compose up -d    //удаление, создание и старт нового отдельного контейнера из проекта docker-compose
+
+  ```
+## ДЗ 18. Установка и настройка Kubernetes (kubeadm).<a name="kubernetes-1"></a>
+
+### План работы
+* Разобрать на практике все компоненты Kubernetes, развернуть их вручную используя kubeadm.
+* Ознакомиться с описанием основных примитивов приложенияи и его дальнейшим запуском в Kubernetes.
+* Задание ** Описать установку кластера k8s с помощью terraform и ansible.
+
+### Практические задачи
+
+#### Выполнение плана работ по сценарию в методичке
+* Развёрнут кластер Kubernetes с использованием kubeadm.
+* Настроен сетевой плагин CALICO.
+* Зааплаены деплойменты.
+* Описана установка кластера k8s с помощью terraform и ansible.
+
+### Useful things
+
+Комманды
+  ```
+    kubectl get nodes                                       //отображение списка нод кластера
+    kubectl describe node {node-name}                       //подробная информация о ноде
+    kubectl apply -f {filename}                             //установка манифеста
+    kubeadm token list
+    kubeadm join --token={token} \
+        --discovery-token-unsafe-skip-ca-verification \
+          {cluster api ip}:6443                             //добавление ноды в кластер
+    kubectl get pods --all-namespaces                       //отображение всех ПОД-ов кластера
 
   ```

@@ -1,2 +1,7 @@
 .env
 build_info.txt
+*.tfstate
+*.tfstate.*.backup
+*.tfstate.backup
+*.tfvars
+*.log
